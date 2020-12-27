@@ -1,0 +1,188 @@
+<style>
+  .cell {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    background-color: green;
+    border: 1px solid white;
+
+    font-size: 50px;
+    line-height: 100px;
+    text-align: center;
+    vertical-align: middle;
+
+    cursor: pointer;
+  }
+</style>
+
+<div id="board"></div>
+
+<script>
+const pattern = new Array(9)
+let round = 1
+let isWin = false
+let color = 2
+
+function check(pattern, color) {
+  const { width, height } = sizeOfPattern(pattern)
+  for (let y = 0; y < height; y++) {
+    let win = true
+    for (let x = 0; x < width; x++) {
+      if (getXY(x, y, pattern, height) !== color) {
+        win = false
+      }
+    }
+    if (win) return true
+  }
+  for (let x = 0; x < width; x++) {
+    let win = true
+    for (let y = 0; y < height; y++) {
+      if (getXY(x, y, pattern, height) !== color) {
+        win = false
+      }
+    }
+    if (win) return true
+  }
+  {
+    let win = true
+    for (let x = 0; x < width; x++) {
+      if (getXY(x, 2-x, pattern, height) !== color) {
+        win = false
+      }
+    }
+    if (win) return true
+  }
+  {
+    let win = true
+    for (let x = 0; x < width; x++) {
+      if (getXY(x, x, pattern, height) !== color) {
+        win = false
+      }
+    }
+    if (win) return true
+  }
+  return false
+}
+
+function bestChoice(pattern, color) {
+  let p
+  if (p = willWin(pattern, color)) {
+    return {
+      point: p,
+      result: 1,
+    }
+  }
+  let result = -2
+  let point = null
+  const { width, height } = sizeOfPattern(pattern)
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (getXY(x, y, pattern, height)) continue
+      let tmp = clone(pattern)
+      setXY(x, y, color, tmp, height)
+      let r = bestChoice(tmp, 3 - color).result
+      if (-r > result) {
+        result = -r
+        point = [x, y]
+      }
+    }
+  }
+  return {
+    point,
+    result: point ? result : 0,
+  }
+}
+
+function willWin(pattern, color) {
+  const { width, height } = sizeOfPattern(pattern)
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (getXY(x, y, pattern, height)) continue
+      let tmp = clone(pattern)
+      setXY(x, y, color, tmp, height)
+      if (check(tmp, color)) {
+        return [x, y]
+      }
+    }
+  }
+  return null
+}
+
+function clone(pattern) {
+  return Object.create(pattern)
+}
+
+function clean(pattern) {
+  const { width, height } = sizeOfPattern(pattern)
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      setXY(x, y, 0, pattern, height)
+    }
+  }
+  console.log(`round ${round++}`)
+}
+
+function userMove(pattern, x, y) {
+  if (isWin) {
+    isWin = false
+    clean(pattern)
+  }
+  setXY(x, y, color, pattern, sizeOfPattern(pattern).height)
+  if (check(pattern, color)) {
+    console.log(`${color === 1 ? '❌' : '⭕️'} is winner!!!`)
+    isWin = true
+  }
+  color = 3 - color
+  show(pattern)
+  computerMove(pattern)
+}
+
+function computerMove(pattern) {
+  let choice = bestChoice(pattern, color)
+  if (choice.point) {
+    setXY(...choice.point, color, pattern, sizeOfPattern(pattern).height)
+  }
+  if (check(pattern, color)) {
+    console.log(`${color === 1 ? '❌' : '⭕️'} is winner!!!`)
+    isWin = true
+  }
+  color = 3 - color
+  show(pattern)
+}
+
+function getXY(x, y, pattern, height) {
+  return pattern[y*height + x]
+}
+function setXY(x, y, v, pattern, height) {
+  pattern[y*height + x] = v
+}
+
+function sizeOfPattern(pattern) {
+  const s = parseInt(Math.sqrt(pattern.length))
+  return {
+    width: s,
+    height: s,
+  }
+}
+
+function show(pattern) {
+  const board = document.getElementById('board')
+  board.innerHTML = ''
+
+  const { width, height } = sizeOfPattern(pattern)
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const cell = document.createElement('span')
+      cell.classList.add('cell')
+      cell.innerText = getXY(x, y, pattern, height) === 1 ? '❌' :
+                       getXY(x, y, pattern, height) === 2 ? '⭕️' : ''
+      cell.addEventListener('click', () => userMove(pattern, x, y))
+      board.appendChild(cell)
+    }
+    board.appendChild(document.createElement('br'))
+  }
+}
+
+clean(pattern)
+show(pattern)
+</script>
