@@ -75,18 +75,18 @@ function run(iterator) {
 
 function co(generator) {
   return function() {
-    run(generator)
+    run(generator())
   }
 }
 
 function* go() {
   while(true) {
     green()
-    yield sleep(100)
+    yield sleep(1000)
     yellow()
-    yield sleep(100)
+    yield sleep(1000)
     red()
-    yield sleep(100)
+    yield sleep(1000)
   }
 }
 
