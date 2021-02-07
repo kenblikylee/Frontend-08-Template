@@ -1,0 +1,58 @@
+<meta charset="utf-8">
+
+<div id="realm"></div>
+
+<script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.1.0/build/g6.js"></script>
+
+<script>
+const data = {
+  nodes: [
+    {
+      id: 'Object',
+    },
+    {
+      id: 'Array',
+    },
+    {
+      id: 'Date',
+    },
+    {
+      id: 'RegExp',
+    },
+    {
+      id: 'Function',
+    },
+    {
+      id: 'Boolean',
+    },
+    {
+      id: 'Number',
+    },
+    {
+      id: 'String',
+    },
+    {
+      id: 'Global',
+    },
+    {
+      id: 'Math',
+    },
+    {
+      id: 'JSON',
+    },
+  ],
+  edges: [{
+    source: 'Object',
+    target: 'Array'
+  }]
+};
+
+const graph = new G6.Graph({
+  container: 'realm',
+  width: 800,
+  height: 500
+});
+
+graph.data(data);
+graph.render();
+</script>
