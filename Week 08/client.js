@@ -1,4 +1,3 @@
-const { timeStamp } = require('console')
 const net  = require('net')
 
 class Request {
