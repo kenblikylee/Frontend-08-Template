@@ -1,0 +1,270 @@
+<script>
+  // basis
+  document.addEventListener('mousedown', grab)
+  document.addEventListener('mouseup', drop)
+  function startDrag() { document.addEventListener('mousemove', drag) }
+  function endDrag() { document.removeEventListener('mousemove', drag) }
+  function grab(e) {
+    getSrcEl(e)
+    getOrigin(e)
+    getVector(e)
+    renderOverlays(_context)
+    startDrag()
+    hideTrace()
+  }
+  function drop(e) {
+    endDrag()
+    getVector(e)
+    clearOverlays(_context)
+    showTrace()
+  }
+  function drag(e) {
+    getVector(e)
+    updateOverlays(_context)
+  }
+  
+  // context
+  let _context = {}
+  function getSrcEl(e) {
+    _context.srcEl = e.target
+  }
+  function getOrigin(e) {
+    _context.origin = [e.clientX, e.clientY]
+  }
+  function getVector(e) {
+    let origin = _context.origin || [0, 0]
+    _context.vector = [e.clientX - origin[0], e.clientY - origin[1]]
+  }
+  
+  function reset() { _context = {} }
+  
+  // trace
+  class CursorTrace {
+    constructor() {
+      this.mounted = false
+    }
+    mount() {
+      this.el = document.createElement('div')
+      this.el.style.cssText = `
+        position: fixed;
+        user-select: none;
+        transform: translate(12px, 12px);`
+      this.update(0, 0)
+      document.body.appendChild(this.el)
+    }
+    update(x, y) {
+      if (!this.mounted) {
+        this.mounted = true
+        this.mount()
+      }
+      this.el.style.left = `${x}px`
+      this.el.style.top = `${y}px`
+      this.el.innerText = `(${x}, ${y})`
+    }
+    hide() {
+      this.el.style.display = 'none'
+    }
+    show() {
+      this.el.style.display = 'block'
+    }
+  }
+  let _trace
+  document.addEventListener('mousemove', function trace(e) {
+    if (!_trace) {
+      _trace = new CursorTrace()
+    }
+    _trace.update(e.clientX, e.clientY)
+  })
+  function showTrace() {
+    _trace && _trace.show()
+  }
+  function hideTrace() {
+    _trace && _trace.hide()
+  }
+  
+  // overlays
+  let _overlays = []
+  function renderOverlays(context) { _overlays.forEach(overlay => overlay.render(context)) }
+  function updateOverlays(context) { _overlays.forEach(overlay => overlay.update(context)) }
+  function clearOverlays() { _overlays.forEach(overlay => overlay.destroy()) }
+  function addOverlay(overlay) { _overlays.push(overlay) }
+  class Overlay {
+    render(context) {
+      this.el = document.createElement('div')
+      this.el.style.cssText = 'position: fixed'
+      this.update(context)
+      document.body.appendChild(this.el)
+    }
+    update(context) {
+      let { origin, vector } = context
+      this.el.style.left = `${origin[0] + vector[0]}px`
+      this.el.style.top = `${origin[1] + vector[1]}px`
+    }
+    destroy() {
+      if (this.el) {
+        this.el.parentNode.removeChild(this.el)
+      }
+    }
+  }
+  class OriginOverlay extends Overlay {
+    render(context) {
+      super.render(context)
+      super.update(context)
+      this.el.style.cssText += `
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background: red;
+        opacity: 0.8;
+        transform: translate(-50%, -50%);
+      `
+    }
+    update() {}
+  }
+  class EndOverlay extends Overlay {
+    render(context) {
+      super.render(context)
+      this.el.style.cssText += `
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background: green;
+        opacity: 0.8;
+        transform: translate(-50%, -50%);
+      `
+    }
+  }
+  class AxisOverlay extends Overlay {
+    constructor(direction = 'x') {
+      super()
+      this.direction = direction
+    }
+    render(context) {
+      super.render(context)
+      if (this.direction === 'y') {
+        this.el.style.cssText += `
+          left: 0; right: 0; top: ${context.origin[1]}px;
+          border-bottom: 1px dashed red;
+        `
+      } else {
+        this.el.style.cssText += `
+          top: 0; bottom: 0; left: ${context.origin[0]}px;
+          border-right: 1px dashed red;
+        `
+      }
+    }
+    update() {}
+  }
+  class ProjectionOverlay extends Overlay {
+    constructor(direction = 'x') {
+      super()
+      this.direction = direction
+    }
+    render(context) {
+      super.render(context)
+      this.update(context)
+    }
+    update(context) {
+      let [ox, oy] = context.origin
+      let [vx, vy] = context.vector
+      if (vx >= 0 && vy >= 0) {
+        if (this.direction === 'y') {
+          this.el.style.cssText += `
+            left: ${ox}px;
+            width: ${vx}px;
+            top: ${oy + vy}px;
+            border-bottom: 1px dashed green;
+          `
+        } else {
+          this.el.style.cssText += `
+            left: ${ox + vx}px;
+            top: ${oy}px;
+            height: ${vy}px;
+            border-right: 1px dashed green;
+          `
+        }
+      } else if (vx >= 0 && vy < 0) {
+        if (this.direction === 'y') {
+          this.el.style.cssText += `
+            left: ${ox}px;
+            width: ${vx}px;
+            top: ${oy + vy}px;
+            border-bottom: 1px dashed green;
+          `
+        } else {
+          this.el.style.cssText += `
+            left: ${ox + vx}px;
+            top: ${oy + vy}px;
+            height: ${-vy}px;
+            border-right: 1px dashed green;
+          `
+        }
+      } else if (vx < 0 && vy < 0) {
+        if (this.direction === 'y') {
+          this.el.style.cssText += `
+            left: ${ox + vx}px;
+            width: ${-vx}px;
+            top: ${oy + vy}px;
+            border-bottom: 1px dashed green;
+          `
+        } else {
+          this.el.style.cssText += `
+            left: ${ox + vx}px;
+            top: ${oy + vy}px;
+            height: ${-vy}px;
+            border-right: 1px dashed green;
+          `
+        }
+      } else if (vx < 0 && vy >= 0) {
+        if (this.direction === 'y') {
+          this.el.style.cssText += `
+            left: ${ox + vx}px;
+            width: ${-vx}px;
+            top: ${oy + vy}px;
+            border-bottom: 1px dashed green;
+          `
+        } else {
+          this.el.style.cssText += `
+            left: ${ox + vx}px;
+            top: ${oy}px;
+            height: ${vy}px;
+            border-right: 1px dashed green;
+          `
+        }
+      }
+    }
+  }
+  class LabelOverlay extends Overlay {
+    constructor(position = 'end') {
+      super()
+      this.position = position
+    }
+    render(context) {
+      super.render(context)
+      super.update(context)
+      this.el.style.userSelect = 'none'
+      if (this.position === 'origin') {
+        this.el.style.transform = 'translate(-86px, -36px)'
+      } else {
+        this.el.style.transform = 'translate(12px, 12px)'
+      }
+    }
+    update(context) {
+      if (this.position === 'origin') {
+        this.el.innerText = `(${context.origin[0]}, ${context.origin[1]})`
+      } else {
+        super.update(context)
+        this.el.innerText = `(${context.vector[0]}, ${context.vector[1]})`
+      }
+    }
+  }
+  addOverlay(new OriginOverlay())
+  addOverlay(new EndOverlay())
+  addOverlay(new AxisOverlay('x'))
+  addOverlay(new AxisOverlay('y'))
+  addOverlay(new LabelOverlay('origin'))
+  addOverlay(new LabelOverlay('end'))
+  addOverlay(new ProjectionOverlay('x'))
+  addOverlay(new ProjectionOverlay('y'))
+  </script>
+    
