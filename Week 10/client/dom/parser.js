@@ -31,7 +31,7 @@ function emit(token) {
     computeCSS(stack, element)
 
     top.children.push(element)
-    element.parent = top
+    // element.parent = top
 
     if (!token.isSelfClosing) {
       stack.push(element)

@@ -4,11 +4,10 @@ function getStyle(element) {
   }
 
   for (let prop in element.computedStyle) {
-    let p = element.computedStyle.value
     element.style[prop] = element.computedStyle[prop].value
 
     if (element.style[prop].toString().match(/px$/)) {
-      element.style[prop]
+      element.style[prop] = ~~element.style[prop].replace('px', '')
     }
   }
 
@@ -336,12 +335,4 @@ module.exports = function layout(element) {
     }
     crossBase += crossSign * (lineCrossSize + step)
   })
-
-  if (element.attributes && element.attributes.length && element.attributes[0].value === 'flex') {
-    console.log(element.attributes[0].value)
-    items.forEach(item => {
-      console.log(item.attributes[0].value)
-      console.log(item.style)
-    })
-  }
 }
