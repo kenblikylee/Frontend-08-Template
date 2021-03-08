@@ -1,0 +1,237 @@
+<html>
+<head>
+  <title>flex layout</title>
+  <style>
+    .flex {
+      display: flex;
+    }
+    .flex-item {
+      flex: 1;
+    }
+    .flex-row {
+      flex-direction: row;
+    }
+    .flex-row-reverse {
+      flex-direction: row-reverse;
+    }
+    .flex-column {
+      flex-direction: column;
+    }
+    .flex-column-reverse {
+      flex-direction: column-reverse;
+    }
+
+    .align-items-stretch { align-items: stretch }
+    .align-items-center { align-items: center }
+    .align-items-flex-start { align-items: flex-start }
+    .align-items-flex-end { align-items: flex-end }
+
+    .align-content-stretch { align-content: stretch }
+    .align-content-center { align-content: center }
+    .align-content-flex-start { align-content: flex-start }
+    .align-content-flex-end { align-content: flex-end }
+    .align-content-space-between { align-content: space-between }
+    .align-content-space-around { align-content: space-around }
+
+    .justify-content-flex-start { justify-content: flex-start }
+    .justify-content-flex-end { justify-content: flex-end }
+    .justify-content-center { justify-content: center }
+    .justify-content-space-between { justify-content: space-between }
+    .justify-content-space-around { justify-content: space-around }
+
+    .flex-wrap-nowrap { flex-wrap: nowrap }
+    .flex-wrap-wrap { flex-wrap: wrap }
+    .flex-wrap-wrap-reverse { flex-wrap: wrap-reverse }
+
+    .align-self-stretch { align-self: stretch }
+    .align-self-center { align-self: center }
+    .align-self-flex-start { align-self: flex-start }
+    .align-self-flex-end { align-self: flex-end }
+
+    .box {
+      width: 100px;
+      height: 100px;
+    }
+    .box-width {
+      width: 100px;
+    }
+    .box-height {
+      height: 100px;
+    }
+    .red {
+      background: red;
+    }
+    .green {
+      background: green;
+    }
+    .blue {
+      background: blue;
+    }
+    .yellow {
+      background: yellow;
+    }
+    .cyan {
+      background: cyan;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h2>flex-row</h2>
+    <div class="flex flex-row">
+      <div class="box red"></div>
+      <div class="box green"></div>
+      <div class="box blue"></div>
+      <div class="flex-item box-height yellow"></div>
+      <div class="flex-item box-height cyan"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>flex-row-reverse</h2>
+    <div class="flex flex-row-reverse">
+      <div class="box red"></div>
+      <div class="box green"></div>
+      <div class="box blue"></div>
+      <div class="flex-item box-height yellow"></div>
+      <div class="flex-item box-height cyan"></div>
+    </div>
+  </section>
+
+  <div class="flex">
+    <section class="flex-item">
+      <h2>flex-column</h2>
+      <div class="flex flex-column" style="height: 700px;">
+        <div class="box red"></div>
+        <div class="box green"></div>
+        <div class="box blue"></div>
+        <div class="flex-item box-width yellow"></div>
+        <div class="flex-item box-width cyan"></div>
+      </div>
+    </section>
+
+    <section class="flex-item">
+      <h2>flex-column-reverse</h2>
+      <div class="flex flex-column-reverse" style="height: 700px;">
+        <div class="box red"></div>
+        <div class="box green"></div>
+        <div class="box blue"></div>
+        <div class="flex-item box-width yellow"></div>
+        <div class="flex-item box-width cyan"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="flex">
+    <section class="flex-item">
+      <h2>flex-row/align-items: flex-start</h2>
+      <div class="flex flex-row align-items-flex-start">
+        <div class="box red" style="height: 50px"></div>
+        <div class="box green" style="height: 100px"></div>
+        <div class="box blue"style="height: 150px"></div>
+      </div>
+    </section>
+
+    <section class="flex-item">
+      <h2>flex-row/align-items: center</h2>
+      <div class="flex flex-row align-items-center">
+        <div class="box red" style="height: 50px"></div>
+        <div class="box green" style="height: 100px"></div>
+        <div class="box blue"style="height: 150px"></div>
+      </div>
+    </section>
+
+    <section class="flex-item">
+      <h2>flex-row/align-items: flex-end</h2>
+      <div class="flex flex-row align-items-flex-end">
+        <div class="box red" style="height: 50px"></div>
+        <div class="box green" style="height: 100px"></div>
+        <div class="box blue"style="height: 150px"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="flex flex-column">
+    <section class="flex-item">
+      <h2>flex-row/justify-content: flex-start</h2>
+      <div class="flex flex-row justify-content-flex-start" style="width: 1000px; border: 1px solid black; padding: 10px;">
+        <div class="box red" style="width: 50px"></div>
+        <div class="box green" style="width: 100px"></div>
+        <div class="box blue"style="width: 150px"></div>
+      </div>
+    </section>
+
+    <section class="flex-item">
+      <h2>flex-row/justify-content: center</h2>
+      <div class="flex flex-row justify-content-center" style="width: 1000px; border: 1px solid black; padding: 10px;">
+        <div class="box red" style="width: 50px"></div>
+        <div class="box green" style="width: 100px"></div>
+        <div class="box blue"style="width: 150px"></div>
+      </div>
+    </section>
+
+    <section class="flex-item">
+      <h2>flex-row/justify-content: flex-end</h2>
+      <div class="flex flex-row justify-content-flex-end" style="width: 1000px; border: 1px solid black; padding: 10px;">
+        <div class="box red" style="width: 50px"></div>
+        <div class="box green" style="width: 100px"></div>
+        <div class="box blue"style="width: 150px"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="flex flex-column">
+    <section class="flex-item">
+      <h2>flex-wrap: nowrap</h2>
+      <div class="flex flex-row flex-wrap-nowrap" style="width: 500px; border: 1px solid black; padding: 10px;">
+        <div class="box-height red" style="width: 200px"></div>
+        <div class="box-height green" style="width: 200px"></div>
+        <div class="box-height blue" style="width: 200px"></div>
+      </div>
+    </section>
+    <section class="flex-item">
+      <h2>flex-wrap: wrap</h2>
+      <div class="flex flex-row flex-wrap-wrap" style="width: 500px; border: 1px solid black; padding: 10px;">
+        <div class="box-height red" style="width: 200px"></div>
+        <div class="box-height green" style="width: 200px"></div>
+        <div class="box-height blue" style="width: 200px"></div>
+      </div>
+    </section>
+    <section class="flex-item">
+      <h2>flex-wrap: wrap-reverse</h2>
+      <div class="flex flex-row flex-wrap-wrap-reverse" style="width: 500px; border: 1px solid black; padding: 10px;">
+        <div class="box-height red" style="width: 200px"></div>
+        <div class="box-height green" style="width: 200px"></div>
+        <div class="box-height blue" style="width: 200px"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="flex flex-column">
+    <section class="flex-item">
+      <h2>align-content: flex-start</h2>
+      <div class="flex flex-row flex-wrap-wrap align-content-flex-start" style="width: 500px; height: 400px; border: 1px solid black; padding: 10px;">
+        <div class="box-height red" style="width: 200px"></div>
+        <div class="box-height green" style="width: 200px"></div>
+        <div class="box-height blue" style="width: 200px"></div>
+      </div>
+    </section>
+    <section class="flex-item">
+      <h2>align-content: center</h2>
+      <div class="flex flex-row flex-wrap-wrap align-content-center" style="width: 500px; height: 400px; border: 1px solid black; padding: 10px;">
+        <div class="box-height red" style="width: 200px"></div>
+        <div class="box-height green" style="width: 200px"></div>
+        <div class="box-height blue" style="width: 200px"></div>
+      </div>
+    </section>
+    <section class="flex-item">
+      <h2>align-content: flex-end</h2>
+      <div class="flex flex-row flex-wrap-wrap align-content-flex-end" style="width: 500px; height: 400px; border: 1px solid black; padding: 10px;">
+        <div class="box-height red" style="width: 200px"></div>
+        <div class="box-height green" style="width: 200px"></div>
+        <div class="box-height blue" style="width: 200px"></div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

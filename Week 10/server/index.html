@@ -1,0 +1,85 @@
+<html>
+<head>
+  <title>flex layout</title>
+  <style>
+    .flex {
+      display: flex;
+    }
+    .flex-item {
+      flex: 1;
+    }
+    .flex-row {
+      flex-direction: row;
+    }
+    .flex-row-reverse {
+      flex-direction: row-reverse;
+    }
+    .flex-column {
+      flex-direction: column;
+    }
+    .flex-column-reverse {
+      flex-direction: column-reverse;
+    }
+
+    .align-items-stretch { align-items: stretch }
+    .align-items-center { align-items: center }
+    .align-items-flex-start { align-items: flex-start }
+    .align-items-flex-end { align-items: flex-end }
+
+    .align-content-stretch { align-content: stretch }
+    .align-content-center { align-content: center }
+    .align-content-flex-start { align-content: flex-start }
+    .align-content-flex-end { align-content: flex-end }
+    .align-content-space-between { align-content: space-between }
+    .align-content-space-around { align-content: space-around }
+
+    .justify-content-flex-start { justify-content: flex-start }
+    .justify-content-flex-end { justify-content: flex-end }
+    .justify-content-center { justify-content: center }
+    .justify-content-space-between { justify-content: space-between }
+    .justify-content-space-around { justify-content: space-around }
+
+    .flex-wrap-nowrap { flex-wrap: nowrap }
+    .flex-wrap-wrap { flex-wrap: wrap }
+    .flex-wrap-wrap-reverse { flex-wrap: wrap-reverse }
+
+    .align-self-stretch { align-self: stretch }
+    .align-self-center { align-self: center }
+    .align-self-flex-start { align-self: flex-start }
+    .align-self-flex-end { align-self: flex-end }
+
+    .box {
+      width: 100px;
+      height: 100px;
+    }
+    .box-width {
+      width: 100px;
+    }
+    .box-height {
+      height: 100px;
+    }
+    .red {
+      background: red;
+    }
+    .green {
+      background: green;
+    }
+    .blue {
+      background: blue;
+    }
+    .yellow {
+      background: yellow;
+    }
+    .cyan {
+      background: cyan;
+    }
+  </style>
+</head>
+<body>
+  <div class="flex">
+    <div class="flex-item box-height red"></div>
+    <div class="flex-item box-height green"></div>
+    <div class="flex-item box-height blue"></div>
+  </div>
+</body>
+</html>
