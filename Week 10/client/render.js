@@ -13,5 +13,11 @@ module.exports = function render(viewport, element) {
       img.fill(r, g, b, 1)
       viewport.draw(img, element.style.left || 0, element.style.top || 0)
     }
+
+    if (element.children) {
+      for (let child of element.children) {
+        render(viewport, child)
+      }
+    }
   }
 }
