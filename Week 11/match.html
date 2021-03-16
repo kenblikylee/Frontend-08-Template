@@ -1,0 +1,89 @@
+<div>
+  <div id="myid" class="cls1">
+    <p id="myid2" data-1="123"></p>
+  </div>
+</div>
+
+<script>
+function match(selector, element) {
+  let simpleSelectors = selector.split(/\s+/)
+  let selfSelector = simpleSelectors.pop()
+  function _matchSimple(selector, element) {
+    // Type selector
+    {
+      let matched = selector.match(/^[\w-_]+/)
+      if (matched) {
+        let tag = matched[0].toLowerCase()
+        if (element.tagName.toLowerCase() !== tag) {
+          return false
+        }
+      }
+    }
+    // ID selector
+    {
+      let matched = selector.match(/#([\w-_]+)/)
+      if (matched) {
+        let id = matched[1]
+        if (element.id !== id) {
+          return false
+        }
+      }
+    }
+    // Class selectors
+    {
+      let matched = selector.match(/\.[\w-_]+/g)
+      if (matched) {
+        let _classes = matched.map(cls => cls.replace('.', ''))
+        let className = element.className
+        if (!className) {
+          return false
+        }
+        if (!_classes.every(cls => className.includes(cls))) {
+          return false
+        }
+      }
+    }
+    // Attribute selector
+    {
+      let matched = selector.match(/\[([\w-_]+)(=(.+))?\]/)
+      if (matched) {
+        let attrName = matched[1]
+        let attrValue = matched[3]
+        if (!element.hasAttribute(attrName)) {
+          return false
+        }
+        if (attrValue && (element.getAttribute(attrName) !== attrValue)) { 
+          return false
+        }
+      }
+    }
+
+    return true
+  }
+  if (!_matchSimple(selfSelector, element)) {
+    return false
+  }
+
+  if (simpleSelectors.length) {
+    let parent = element.parentNode
+    while (simpleSelectors.length) {
+      let parentSelector = simpleSelectors.pop()
+      while (parent) {
+        if (!_matchSimple(parentSelector, parent)) {
+          parent = parent.parentNode
+        } else {
+          break
+        }
+      }
+      if (!parent) {
+        return false
+      }
+    }
+  }
+
+  return true
+}
+
+console.log(match('div #myid.cls1', document.getElementById('myid')))
+console.log(match('div .cls1 p[data-1=123]', document.getElementById('myid2')))
+</script>
