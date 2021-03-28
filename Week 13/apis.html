@@ -1,0 +1,91 @@
+<script>
+  let names = Object.getOwnPropertyNames(window)
+
+  function filterOut(names, props) {
+    let set = new Set()
+    props.forEach(o => set.add(o))
+    return names.filter(e => !set.has(e))
+  }
+
+  // ECMA 262
+  {
+    let js  = new Set()
+    let objects = ['globalThis', 'console', 'BigInt', 'BigInt64Array', 'BigUint64Array', 'Infinity', 'NaN', 'undefined', 'eval', 'isFinite', 'isNaN', 'Object', 'Function', 'Array', 'Number', 'Boolean', 'String', 'Symbol',  'Date', 'Promise', 'RegExp', 'Error', 'JSON', 'Math', 'parseFloat', 'parseInt', 'ArrayBuffer', 'Map', 'Set', 'WeakMap', 'WeakSet', 'Proxy', 'Reflect', 'Intl', 'decodeURI', 'encodeURI', 'encodeURIComponent', 'decodeURIComponent', 'escape', 'unescape']
+    objects.forEach(o => js.add(o))
+    names = names.filter(e => !js.has(e))
+    names = names.filter(e => !/.+(Error|Array)$/.test(e))
+  }
+
+  // Subclass of Node
+  names = names.filter(e => {
+    try {
+      return !(window[e].prototype instanceof Node)
+    } catch (err) {
+      return true
+    }
+  }).filter(e => e != 'Node')
+
+  // Events
+  names = names.filter(e => !e.match(/^on/))
+
+  // Webkit private
+  names = names.filter(e => !e.match(/^webkit/i))
+
+  // https://html.spec.whatwg.org/#window
+  {
+    let names = Object.getOwnPropertyNames(window)
+    let js = new Set()
+    let objects = ['BigInt', 'BigInt64Array', 'BigUint64Array', 'Infinity', 'NaN', 'undefined', 'eval', 'isFinite', 'isNaN', 'parseInt', 'parseFloat']
+    objects.forEach(o => js.add(o))
+    names = names.filter(e => !js.has(e))
+  
+    names = names.filter(e => {
+      try {
+        return !(window[e].prototype instanceof Node)
+      } catch (err) {
+        return true
+      }
+    }).filter(e => e != 'Node')
+
+    let windowProps = new Set()
+    objects = ['window', 'self', 'document', 'name', 'location', 'history', 'customElements', 'locationbar', 'menubar', 'personalbar', 'scrollbars', 'statusbar', 'toolbar']
+    objects.forEach(o => windowProps.add(o))
+    names = names.filter(e => !windowProps.has(e))
+  }
+  names = filterOut(names, ['Window', 'self', 'document', 'name', 'location', 'history', 'customElements', 'locationbar', 'menubar', 'personalbar', 'scrollbars', 'statusbar', 'toolbar', 'DataView'])
+
+  // https://html.spec.whatwg.org/
+  names = filterOut(names, ['ApplicationCache', 'AudioTrack', 'AudioTrackList', 'BarProp', 'BeforeUnloadEvent', 'BroadcastChannel', 'CanvasGradient'])
+
+  // http://www.ecma-international.org/ecma-402/5.0/index.html#Title
+  // Intl
+
+  // https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15
+  names = names.filter(e => !e.match(/^WebGL/))
+
+  // https://www.w3.org/TR/webaudio/
+  names = names.filter(e => !e.match(/^Audio/))
+
+  // https://www.w3.org/TR/DOM-Level-3-XPath/xpath.html
+  names = names.filter(e => !e.match(/^XPath/))
+
+  // https://w3c.github.io/DOM-Parsing/#the-xmlserializer-interface
+  names = filterOut(names, ['XMLSerializer'])
+
+  // https://xhr.spec.whatwg.org/
+  names = filterOut(names, ['XMLHttpRequestUpload', 'XMLHttpRequestEventTarget', 'XMLHttpRequest'])
+
+  // https://encoding.spec.whatwg.org/#dom-textencoder
+  names = filterOut(names, ['TextDecoder', 'TextEncoder', 'TextDecoderStream', 'TextEncoderStream'])
+
+  // https://streams.spec.whatwg.org/#blqs-class
+  names = names.filter(e => !e.match(/^ReadableStream/))
+
+  // https://streams.spec.whatwg.org/#ws-class
+  names = names.filter(e => !e.match(/^WritableStream/))
+
+  // https://wicg.github.io/BackgroundSync/spec/#sync-manager-interface
+  names = filterOut(names, ['SyncManager'])
+
+  console.log(names)
+</script>
